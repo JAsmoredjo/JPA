@@ -11,7 +11,7 @@ import java.util.List;
 public class McDonaldsDAO {
     private EntityManager entityManager;
 
-    public  McDonaldsDAO(EntityManager entityManager) {
+    public McDonaldsDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -52,13 +52,13 @@ public class McDonaldsDAO {
 
     public int updateMcDonalds(McDonalds mcDonalds) {
         entityManager.getTransaction().begin();
-        String sql = "update McDonalds m set m.address = :address, m.phoneNumber = :phoneNumber, m.code = :code, m.city = :city where m.id = :id";
+        String sql = "update McDonalds m set m.phoneNumber = :phoneNumber, m.code = :code, m.city = :city, m.address = :address where m.id = :id";
         Query query = entityManager.createQuery(sql);
         query.setParameter("id", mcDonalds.getId());
-        query.setParameter("address", mcDonalds.getAddress());
         query.setParameter("phoneNumber", mcDonalds.getPhoneNumber());
         query.setParameter("code", mcDonalds.getCode());
         query.setParameter("city", mcDonalds.getCity());
+        query.setParameter("address", mcDonalds.getAddress());
         int updated = query.executeUpdate();
         entityManager.getTransaction().commit();
         return updated;

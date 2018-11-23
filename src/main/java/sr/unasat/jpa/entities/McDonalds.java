@@ -1,6 +1,8 @@
 package sr.unasat.jpa.entities;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "mc_donalds")
@@ -10,9 +12,6 @@ public class McDonalds {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(name = "address", nullable = false)
-    private String address;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
@@ -24,20 +23,22 @@ public class McDonalds {
     @JoinColumn(name = "city_fk")
     private City city;
 
+    @OneToOne
+    @JoinColumn(name = "address_fk")
+    private Address address;
+
+    @ManyToMany
+    @JoinTable(name = "mc_donalds_employee",
+    joinColumns = @JoinColumn(name = "mc_donalds_id"),
+    inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    private Set<Employee> employees;
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getPhoneNumber() {
@@ -64,13 +65,31 @@ public class McDonalds {
         this.city = city;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
+    }
+
     @Override
     public String toString() {
         return "McDonalds{" +
                 "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", code='" + code + '\'' +
+                ", city=" + city +
                 ", address=" + address +
-                ", phoneNumber=" + phoneNumber +
-                ", code=" + code +
-                ", " + city.toString() + '}';
+                ", employees=" + employees +
+                '}';
     }
 }

@@ -1,7 +1,6 @@
 package sr.unasat.jpa.dao;
 
 import sr.unasat.jpa.entities.City;
-import sr.unasat.jpa.entities.McDonalds;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -11,7 +10,7 @@ import java.util.List;
 public class CityDAO {
     private EntityManager entityManager;
 
-    public  CityDAO(EntityManager entityManager) {
+    public CityDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

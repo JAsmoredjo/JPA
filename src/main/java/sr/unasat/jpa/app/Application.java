@@ -1,9 +1,13 @@
 package sr.unasat.jpa.app;
 
 import sr.unasat.jpa.config.JPAConfiguration;
+import sr.unasat.jpa.dao.AddressDAO;
 import sr.unasat.jpa.dao.CityDAO;
+import sr.unasat.jpa.dao.EmployeeDAO;
 import sr.unasat.jpa.dao.McDonaldsDAO;
+import sr.unasat.jpa.entities.Address;
 import sr.unasat.jpa.entities.City;
+import sr.unasat.jpa.entities.Employee;
 import sr.unasat.jpa.entities.McDonalds;
 
 import java.util.List;
@@ -13,105 +17,69 @@ import static java.lang.System.out;
 public class Application {
     public static void main(String[] args) {
         CityDAO cityDAO = new CityDAO(JPAConfiguration.getEntityManager());
-        out.println("\nCurrent Table");
-        List<City> cityList = cityDAO.selectAllCity();
-        for (City cityTemp : cityList) {
-            out.println(cityTemp);
-        }
-
+        AddressDAO addressDAO = new AddressDAO((JPAConfiguration.getEntityManager()));
+        EmployeeDAO employeeDAO = new EmployeeDAO(JPAConfiguration.getEntityManager());
         McDonaldsDAO mcDonaldsDAO = new McDonaldsDAO(JPAConfiguration.getEntityManager());
+
+        List<City> cityList = cityDAO.selectAllCity();
+        List<Address> addressList = addressDAO.selectAllAddress();
+        List<Employee> employeeList = employeeDAO.selectAllEmployee();
         List<McDonalds> mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
-        for (McDonalds mcDonaldsTemp : mcDonaldsList) {
-            out.println(mcDonaldsTemp);
-        }
 
+        out.println("\n\nCurrent Table\n");
+        cityList.forEach(System.out::println);
+        addressList.forEach(System.out::println);
+        employeeList.forEach(System.out::println);
+        mcDonaldsList.forEach(System.out::println);
 
-        out.println("\nSelect McDonalds by City");
-        List<McDonalds> mcDonaldsList1 = mcDonaldsDAO.selectAllMcDonaldsByCity("c_n1");
-        for (McDonalds mcDonaldsTemp : mcDonaldsList1) {
-            out.println(mcDonaldsTemp);
-        }
+        City city = cityDAO.selectCity("c_n1");
+        Address address = addressDAO.selectAddress("a_n1");
+        Employee employee = employeeDAO.selectEmployee("e_c1");
+        McDonalds mcDonalds = mcDonaldsDAO.selectMcDonalds("m_c1");
 
-        City cityNew = new City();
-        cityNew.setName("c_n_new");
-        cityNew.setDescription("c_n_new");
-        cityDAO.insertCity(cityNew);
-        out.println("\nTable After City Insert");
+        city.setName("new");
+        city.setDescription("new");
+        address.setName("new");
+        employee.setCode("new");
+        employee.setFirstName("new");
+        employee.setLastName("new");
+        employee.setGender('v');
+        employee.setPhoneNumber("new");
+        employee.setEmail("new");
+        mcDonalds.setPhoneNumber("new");
+        mcDonalds.setCode("new");
+
+        cityDAO.updateCity(city);
+        addressDAO.updateAddress(address);
+        employeeDAO.updateEmployee(employee);
+        mcDonaldsDAO.updateMcDonalds(mcDonalds);
+
         cityList = cityDAO.selectAllCity();
-        for (City cityTemp : cityList) {
-            out.println(cityTemp);
-        }
+        addressList = addressDAO.selectAllAddress();
+        employeeList = employeeDAO.selectAllEmployee();
         mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
-        for (McDonalds mcDonaldsTemp : mcDonaldsList) {
-            out.println(mcDonaldsTemp);
-        }
 
-        City citySelect = cityDAO.selectCity("c_n_new");
-        McDonalds mcDonalds = new McDonalds();
-        mcDonalds.setAddress("m_a_new");
-        mcDonalds.setPhoneNumber("m_pn_new");
-        mcDonalds.setCode("m_c_new");
-        mcDonalds.setCity(citySelect);
-        mcDonaldsDAO.insertMcDonalds(mcDonalds);
-        out.println("\nTable After McDonalds Insert");
-        cityList = cityDAO.selectAllCity();
-        for (City cityTemp : cityList) {
-            out.println(cityTemp);
-        }
-        mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
-        for (McDonalds mcDonaldsTemp : mcDonaldsList) {
-            out.println(mcDonaldsTemp);
-        }
+        out.println("\n\nUpdate Table\n");
+        cityList.forEach(System.out::println);
+        addressList.forEach(System.out::println);
+        employeeList.forEach(System.out::println);
+        mcDonaldsList.forEach(System.out::println);
 
-        citySelect.setName("c_n_new_new");
-        citySelect.setDescription("c_d_new_new");
-        cityDAO.updateCity(citySelect);
-        out.println("\nTable After City Update");
-        cityList = cityDAO.selectAllCity();
-        for (City cityTemp : cityList) {
-            out.println(cityTemp);
-        }
-        mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
-        for (McDonalds mcDonaldsTemp : mcDonaldsList) {
-            out.println(mcDonaldsTemp);
-        }
+        mcDonaldsDAO.deleteMcDonalds(mcDonalds);
+        cityDAO.deleteCity(city);
+        addressDAO.deleteAddress(address);
+        employeeDAO.deleteEmployee(employee);
 
-        McDonalds mcDonaldsSelect = mcDonaldsDAO.selectMcDonalds("m_c_new");
-        mcDonaldsSelect.setAddress("m_a_new_new");
-        mcDonaldsSelect.setPhoneNumber("m_pn_new_new");
-        mcDonaldsSelect.setCode("m_c_new_new");
-        mcDonaldsDAO.updateMcDonalds(mcDonaldsSelect);
-        out.println("\nTable After McDonalds Update");
         cityList = cityDAO.selectAllCity();
-        for (City cityTemp : cityList) {
-            out.println(cityTemp);
-        }
+        addressList = addressDAO.selectAllAddress();
+        employeeList = employeeDAO.selectAllEmployee();
         mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
-        for (McDonalds mcDonaldsTemp : mcDonaldsList) {
-            out.println(mcDonaldsTemp);
-        }
 
-        mcDonaldsDAO.deleteMcDonalds(mcDonaldsSelect);
-        out.println("\nTable After McDonalds Delete");
-        cityList = cityDAO.selectAllCity();
-        for (City cityTemp : cityList) {
-            out.println(cityTemp);
-        }
-        mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
-        for (McDonalds mcDonaldsTemp : mcDonaldsList) {
-            out.println(mcDonaldsTemp);
-        }
-
-        cityDAO.deleteCity(citySelect);
-        out.println("\nTable After City Delete");
-        cityList = cityDAO.selectAllCity();
-        for (City cityTemp : cityList) {
-            out.println(cityTemp);
-        }
-        mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
-        for (McDonalds mcDonaldsTemp : mcDonaldsList) {
-            out.println(mcDonaldsTemp);
-        }
+        out.println("\n\nDelete Table\n");
+        cityList.forEach(System.out::println);
+        addressList.forEach(System.out::println);
+        employeeList.forEach(System.out::println);
+        mcDonaldsList.forEach(System.out::println);
         JPAConfiguration.shutdown();
     }
 }

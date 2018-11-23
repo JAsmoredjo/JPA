@@ -1,25 +1,21 @@
 package sr.unasat.jpa.entities;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "city")
-public class City {
+@Table(name = "address")
+public class Address {
 
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", nullable = false)
-    private String description;
-
-    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
-    private List<McDonalds> mcDonalds;
+    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
+    private McDonalds mcDonalds;
 
     public int getId() {
         return id;
@@ -37,28 +33,19 @@ public class City {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<McDonalds> getMcDonalds() {
+    public McDonalds getMcDonalds() {
         return mcDonalds;
     }
 
-    public void setMcDonalds(List<McDonalds> mcDonalds) {
+    public void setMcDonalds(McDonalds mcDonalds) {
         this.mcDonalds = mcDonalds;
     }
 
     @Override
     public String toString() {
-        return "City{" +
+        return "Address{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
                 '}';
     }
 }
