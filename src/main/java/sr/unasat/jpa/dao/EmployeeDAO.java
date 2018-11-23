@@ -42,13 +42,12 @@ public class EmployeeDAO {
 
     public int updateEmployee(Employee employee) {
         entityManager.getTransaction().begin();
-        String jpql = "update Employee e set e.code = :code, e.firstName = :firstName, e.lastName = :lastName, e.dob = :dob, e.gender = :gender, e.phoneNumber = :phoneNumber, e.email = :email where e.id = :id";
+        String jpql = "update Employee e set e.code = :code, e.firstName = :firstName, e.lastName = :lastName, e.gender = :gender, e.phoneNumber = :phoneNumber, e.email = :email where e.id = :id";
         Query query = entityManager.createQuery(jpql);
         query.setParameter("id", employee.getId());
         query.setParameter("code", employee.getCode());
         query.setParameter("firstName", employee.getFirstName());
         query.setParameter("lastName", employee.getLastName());
-        query.setParameter("dob", employee.getDob());
         query.setParameter("gender", employee.getGender());
         query.setParameter("phoneNumber", employee.getPhoneNumber());
         query.setParameter("email", employee.getEmail());

@@ -22,9 +22,6 @@ public class Employee {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "dob", nullable = false)
-    private LocalDate dob;
-
     @Column(name = "gender", nullable = false)
     private char gender;
 
@@ -69,14 +66,6 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public LocalDate getDob() {
-        return dob;
-    }
-
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
-    }
-
     public char getGender() {
         return gender;
     }
@@ -116,7 +105,6 @@ public class Employee {
                 ", code='" + code + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", dob=" + dob +
                 ", gender=" + gender +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", email='" + email + '\'' +
