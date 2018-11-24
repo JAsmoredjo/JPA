@@ -19,7 +19,6 @@ create table if not exists employee (
     code varchar(50) not null,
     first_name varchar(50) not null,
     last_name varchar(50) not null,
-    dob date not null,
     gender varchar(1) not null,
     phone_number varchar(50) not null,
     email varchar(50) not null,
@@ -61,8 +60,8 @@ values
 
 insert into employee
 values
-(null, "e_c1", "e_fn1", "e_ln1", "1990-1-1", "m", "e_pn1", "e_e1"),
-(null, "e_c2", "e_fn2", "e_ln2", "1990-2-2", "v", "e_pn2", "e_e2");
+(null, "e_c1", "e_fn1", "e_ln1", "m", "e_pn1", "e_e1"),
+(null, "e_c2", "e_fn2", "e_ln2", "v", "e_pn2", "e_e2");
 
 insert into mc_donalds
 values
@@ -71,5 +70,5 @@ values
 
 insert into mc_donalds_employee
 values
-(1, 1, null),
-(2, 2, null);
+(1, 1, now()),
+(2, 2, now());
