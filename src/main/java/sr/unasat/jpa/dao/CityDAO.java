@@ -3,7 +3,6 @@ package sr.unasat.jpa.dao;
 import sr.unasat.jpa.entities.City;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -40,25 +39,17 @@ public class CityDAO {
         entityManager.getTransaction().commit();
     }
 
-    public int updateCity(City city) {
+    public void updateCity(City city) {
         entityManager.getTransaction().begin();
-        String sql = "update City c set c.name = :name, c.description = :description where c.id = :id";
-        Query query = entityManager.createQuery(sql);
-        query.setParameter("id", city.getId());
-        query.setParameter("name", city.getName());
-        query.setParameter("description", city.getDescription());
-        int updated = query.executeUpdate();
+        entityManager.merge(city);
         entityManager.getTransaction().commit();
-        return updated;
     }
 
-    public int deleteCity(City city) {
-        entityManager.getTransaction().begin();
-        String sql = "delete from City c where c.name = :name";
-        Query query = entityManager.createQuery(sql);
-        query.setParameter("name", city.getName());
-        int deleted = query.executeUpdate();
-        entityManager.getTransaction().commit();
-        return deleted;
+    public void deleteCity(City city) {
+        if (city.getMcDonalds() == null) {
+            entityManager.getTransaction().begin();
+            entityManager.remove(city);
+            entityManager.getTransaction().commit();
+        }
     }
 }

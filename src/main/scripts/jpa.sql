@@ -14,6 +14,7 @@ create table if not exists address (
     name varchar(50) not null,
     primary key (id)
 );
+
 create table if not exists employee (
     id int not null auto_increment,
     code varchar(50) not null,

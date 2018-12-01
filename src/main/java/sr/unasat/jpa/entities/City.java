@@ -1,7 +1,8 @@
 package sr.unasat.jpa.entities;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "city")
@@ -18,8 +19,8 @@ public class City {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
-    private List<McDonalds> mcDonalds;
+    @OneToMany(mappedBy = "city")
+    private Set<McDonalds> mcDonalds = new HashSet<>();
 
     public int getId() {
         return id;
@@ -45,12 +46,30 @@ public class City {
         this.description = description;
     }
 
-    public List<McDonalds> getMcDonalds() {
+    public Set<McDonalds> getMcDonalds() {
         return mcDonalds;
     }
 
-    public void setMcDonalds(List<McDonalds> mcDonalds) {
+    public void setMcDonalds(Set<McDonalds> mcDonalds) {
         this.mcDonalds = mcDonalds;
+    }
+
+    public void addMcDonalds(McDonalds mcDonalds) {
+        if (mcDonalds.getCity() != this) {
+            mcDonalds.setCity(this);
+        }
+        if (!this.mcDonalds.contains(mcDonalds)) {
+            this.mcDonalds.add(mcDonalds);
+        }
+    }
+
+    public void removeMcDonalds(McDonalds mcDonalds) {
+        if (mcDonalds.getCity() == this) {
+            mcDonalds.setCity(null);
+        }
+        if (this.mcDonalds.contains(mcDonalds)) {
+            this.mcDonalds.remove(mcDonalds);
+        }
     }
 
     @Override

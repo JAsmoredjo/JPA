@@ -10,9 +10,7 @@ import sr.unasat.jpa.entities.City;
 import sr.unasat.jpa.entities.Employee;
 import sr.unasat.jpa.entities.McDonalds;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static java.lang.System.out;
 
@@ -33,15 +31,25 @@ public class Application {
         addressList.forEach(System.out::println);
         employeeList.forEach(System.out::println);
         mcDonaldsList.forEach(System.out::println);
-
-        City city1 = new City();
-        city1.setName("c");
-        city1.setDescription("c");
-        cityDAO.insertCity(city1);
+        out.println("\n\n");
 
         Address address1 = new Address();
-        address1.setName("a");
-        addressDAO.insertAddress(address1);
+        address1.setName("a1");
+        boolean add1 = false;
+        Address address2 = new Address();
+        address2.setName("a2");
+
+        List<McDonalds> mcDonaldsList1 = mcDonaldsDAO.selectAllMcDonalds();
+        for (McDonalds mcDonalds : mcDonaldsList1) {
+            if (!add1) {
+                add1 = true;
+                mcDonalds.setAddress(address1);
+            } else {
+                mcDonalds.setAddress(address2);
+            }
+        }
+        addressDAO.insertAddress(mcDonaldsList1);
+
 
         Employee employee1 = new Employee();
         employee1.setCode("e1");
@@ -52,6 +60,7 @@ public class Application {
         employee1.setPhoneNumber("e1");
         employeeDAO.insertEmployee(employee1);
 
+
         Employee employee2 = new Employee();
         employee2.setCode("e2");
         employee2.setFirstName("e2");
@@ -59,27 +68,33 @@ public class Application {
         employee2.setGender('v');
         employee2.setEmail("e2");
         employee2.setPhoneNumber("e2");
-        employeeDAO.insertEmployee(employee2);
 
-        McDonalds mcDonalds1 = new McDonalds();
-        mcDonalds1.setCode("m");
-        mcDonalds1.setPhoneNumber("m");
-        mcDonalds1.setCity(city1);
+        McDonalds mcDonalds1 = mcDonaldsDAO.selectMcDonalds("m_c1");
+        employee2.addMcDonalds(mcDonalds1);
+        employeeDAO.insertEmployee(mcDonalds1);
 
-        Address addressNew = addressDAO.selectAddress("a");
-        mcDonalds1.setAddress(addressNew);
-        Employee employeeNew1 = employeeDAO.selectEmployee("e1");
-        Employee employeeNew2 = employeeDAO.selectEmployee("e2");
-        Set<Employee> employeeSet = new HashSet<>();
-        employeeSet.add(employeeNew1);
-        employeeSet.add(employeeNew2);
-        mcDonalds1.setEmployees(employeeSet);
-        mcDonaldsDAO.insertMcDonalds(mcDonalds1);
 
-        mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
+        McDonalds mcDonalds2 = new McDonalds();
+        mcDonalds2.setPhoneNumber("m");
+        mcDonalds2.setCode("m");
+        City city1 = cityDAO.selectCity("c_n1");
+        mcDonalds2.setCity(city1);
+        Address address3 = addressDAO.selectAddress("a_n2");
+        mcDonalds2.setAddress(address3);
+        Employee employee3 = employeeDAO.selectEmployee("e_c1");
+        employee3.addMcDonalds(mcDonalds2);
+        employeeDAO.updateEmployee(employee3);
+
+
+        McDonalds mcDonalds3 = mcDonaldsDAO.selectMcDonalds("m_c2");
+        employee3.addMcDonalds(mcDonalds3);
+        employeeDAO.updateEmployee(employee3);
+
+
         cityList = cityDAO.selectAllCity();
         addressList = addressDAO.selectAllAddress();
         employeeList = employeeDAO.selectAllEmployee();
+        mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
 
         out.println("\n\nInsert Table\n");
         cityList.forEach(System.out::println);
@@ -87,51 +102,29 @@ public class Application {
         employeeList.forEach(System.out::println);
         mcDonaldsList.forEach(System.out::println);
 
-        City city = cityDAO.selectCity("c_n1");
-        Address address = addressDAO.selectAddress("a_n1");
-        Employee employee = employeeDAO.selectEmployee("e_c1");
-        McDonalds mcDonalds = mcDonaldsDAO.selectMcDonalds("m_c1");
 
-        city.setName("new");
-        city.setDescription("new");
-        address.setName("new");
-        employee.setCode("new");
-        employee.setFirstName("new");
-        employee.setLastName("new");
-        employee.setGender('v');
-        employee.setPhoneNumber("new");
-        employee.setEmail("new");
-        mcDonalds.setPhoneNumber("new");
-        mcDonalds.setCode("new");
-        mcDonalds.setEmployees(employeeSet);
+        List<McDonalds> mcDonaldsList2 = mcDonaldsDAO.selectAllMcDonalds();
+        McDonalds mcDonalds4 = new McDonalds();
+        mcDonalds4.setPhoneNumber("n");
+        mcDonalds4.setCode("n");
+        mcDonalds4.setCity(city1);
+        Address address4 = new Address();
+        address4.setName("q");
+        addressDAO.insertAddress(address4);
+        mcDonalds4.setAddress(address4);
+        mcDonaldsList2.add(mcDonalds4);
+        for (McDonalds mcDonalds : mcDonaldsList2) {
+            mcDonalds.addEmployee(employee3);
+        }
+        employeeDAO.updateEmployee(employee3);
 
-        cityDAO.updateCity(city);
-        addressDAO.updateAddress(address);
-        employeeDAO.updateEmployee(employee);
-        mcDonaldsDAO.updateMcDonalds(mcDonalds);
 
         cityList = cityDAO.selectAllCity();
         addressList = addressDAO.selectAllAddress();
         employeeList = employeeDAO.selectAllEmployee();
         mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
 
-        out.println("\n\nUpdate Table\n");
-        cityList.forEach(System.out::println);
-        addressList.forEach(System.out::println);
-        employeeList.forEach(System.out::println);
-        mcDonaldsList.forEach(System.out::println);
-
-        mcDonaldsDAO.deleteMcDonalds(mcDonalds);
-        cityDAO.deleteCity(city);
-        addressDAO.deleteAddress(address);
-        employeeDAO.deleteEmployee(employee);
-
-        mcDonaldsList = mcDonaldsDAO.selectAllMcDonalds();
-        cityList = cityDAO.selectAllCity();
-        addressList = addressDAO.selectAllAddress();
-        employeeList = employeeDAO.selectAllEmployee();
-
-        out.println("\n\nDelete Table\n");
+        out.println("\n\nUpdate All Table\n");
         cityList.forEach(System.out::println);
         addressList.forEach(System.out::println);
         employeeList.forEach(System.out::println);

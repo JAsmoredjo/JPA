@@ -1,8 +1,8 @@
 package sr.unasat.jpa.entities;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "employee")
@@ -32,7 +32,7 @@ public class Employee {
     private String email;
 
     @ManyToMany(mappedBy = "employees")
-    private List<McDonalds> mcDonalds;
+    private Set<McDonalds> mcDonalds = new HashSet<>();
 
     public int getId() {
         return id;
@@ -90,12 +90,30 @@ public class Employee {
         this.email = email;
     }
 
-    public List<McDonalds> getMcDonalds() {
+    public Set<McDonalds> getMcDonalds() {
         return mcDonalds;
     }
 
-    public void setMcDonalds(List<McDonalds> mcDonalds) {
+    public void setMcDonalds(Set<McDonalds> mcDonalds) {
         this.mcDonalds = mcDonalds;
+    }
+
+    public void addMcDonalds(McDonalds mcDonalds) {
+        if (!mcDonalds.getEmployees().contains(this)) {
+            mcDonalds.getEmployees().add(this);
+        }
+        if (!this.mcDonalds.contains(mcDonalds)) {
+            this.mcDonalds.add(mcDonalds);
+        }
+    }
+
+    public void removeMcDonalds(McDonalds mcDonalds) {
+        if (mcDonalds.getEmployees().contains(this)) {
+            mcDonalds.getEmployees().remove(this);
+        }
+        if (this.mcDonalds.contains(mcDonalds)) {
+            this.mcDonalds.remove(mcDonalds);
+        }
     }
 
     @Override

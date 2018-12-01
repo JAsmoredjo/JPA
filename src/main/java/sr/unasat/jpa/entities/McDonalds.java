@@ -1,7 +1,7 @@
 package sr.unasat.jpa.entities;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -31,7 +31,7 @@ public class McDonalds {
     @JoinTable(name = "mc_donalds_employee",
     joinColumns = @JoinColumn(name = "mc_donalds_id"),
     inverseJoinColumns = @JoinColumn(name = "employee_id"))
-    private Set<Employee> employees;
+    private Set<Employee> employees = new HashSet<>();
 
     public int getId() {
         return id;
@@ -79,6 +79,24 @@ public class McDonalds {
 
     public void setEmployees(Set<Employee> employees) {
         this.employees = employees;
+    }
+
+    public void addEmployee(Employee employee) {
+        if (!employee.getMcDonalds().contains(this)) {
+            employee.getMcDonalds().add(this);
+        }
+        if (!this.employees.contains(employee)) {
+            this.employees.add(employee);
+        }
+    }
+
+    public void removeEmployee(Employee employee) {
+        if (employee.getMcDonalds().contains(this)) {
+            employee.getMcDonalds().remove(this);
+        }
+        if (this.employees.contains(employee)) {
+            this.employees.remove(employee);
+        }
     }
 
     @Override

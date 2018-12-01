@@ -1,10 +1,9 @@
 package sr.unasat.jpa.dao;
 
-import sr.unasat.jpa.entities.City;
+import sr.unasat.jpa.entities.Employee;
 import sr.unasat.jpa.entities.McDonalds;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -50,27 +49,19 @@ public class McDonaldsDAO {
         entityManager.getTransaction().commit();
     }
 
-    public int updateMcDonalds(McDonalds mcDonalds) {
+    public void updateMcDonalds(McDonalds mcDonalds) {
         entityManager.getTransaction().begin();
-        String sql = "update McDonalds m set m.phoneNumber = :phoneNumber, m.code = :code, m.city = :city, m.address = :address where m.id = :id";
-        Query query = entityManager.createQuery(sql);
-        query.setParameter("id", mcDonalds.getId());
-        query.setParameter("phoneNumber", mcDonalds.getPhoneNumber());
-        query.setParameter("code", mcDonalds.getCode());
-        query.setParameter("city", mcDonalds.getCity());
-        query.setParameter("address", mcDonalds.getAddress());
-        int updated = query.executeUpdate();
+        entityManager.merge(mcDonalds);
         entityManager.getTransaction().commit();
-        return updated;
     }
 
-    public int deleteMcDonalds(McDonalds mcDonalds) {
+    public void deleteMcDonalds(McDonalds mcDonalds) {
         entityManager.getTransaction().begin();
-        String sql = "delete from McDonalds m where m.code = :code";
-        Query query = entityManager.createQuery(sql);
-        query.setParameter("code", mcDonalds.getCode());
-        int deleted = query.executeUpdate();
+        while (mcDonalds.getEmployees().iterator().hasNext()) {
+            Employee employee = mcDonalds.getEmployees().iterator().next();
+            mcDonalds.removeEmployee(employee);
+        }
+        entityManager.remove(mcDonalds);
         entityManager.getTransaction().commit();
-        return deleted;
     }
 }

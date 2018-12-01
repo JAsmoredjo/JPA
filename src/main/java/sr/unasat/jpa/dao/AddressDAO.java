@@ -1,9 +1,9 @@
 package sr.unasat.jpa.dao;
 
 import sr.unasat.jpa.entities.Address;
+import sr.unasat.jpa.entities.McDonalds;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -40,24 +40,27 @@ public class AddressDAO {
         entityManager.getTransaction().commit();
     }
 
-    public int updateAddress(Address address) {
+    public void insertAddress(List<McDonalds> mcDonaldsList) {
         entityManager.getTransaction().begin();
-        String jpql = "update Address a set a.name = :name where a.id = :id";
-        Query query = entityManager.createQuery(jpql);
-        query.setParameter("id", address.getId());
-        query.setParameter("name", address.getName());
-        int updated = query.executeUpdate();
+        for (McDonalds mcDonalds : mcDonaldsList) {
+            if (mcDonalds.getAddress().getId() == 0) {
+                entityManager.persist(mcDonalds.getAddress());
+            }
+        }
         entityManager.getTransaction().commit();
-        return updated;
     }
 
-    public int deleteAddress(Address address) {
+    public void updateAddress(Address address) {
         entityManager.getTransaction().begin();
-        String jpql = "delete from Address a where a.name = :name";
-        Query query = entityManager.createQuery(jpql);
-        query.setParameter("name", address.getName());
-        int deleted = query.executeUpdate();
+        entityManager.merge(address);
         entityManager.getTransaction().commit();
-        return deleted;
+    }
+
+    public void deleteAddress(Address address) {
+        if (address.getMcDonalds() == null) {
+            entityManager.getTransaction().begin();
+            entityManager.remove(address);
+            entityManager.getTransaction().commit();
+        }
     }
 }

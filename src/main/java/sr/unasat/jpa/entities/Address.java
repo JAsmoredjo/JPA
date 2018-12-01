@@ -14,7 +14,7 @@ public class Address {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "address")
     private McDonalds mcDonalds;
 
     public int getId() {

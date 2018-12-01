@@ -1,11 +1,13 @@
 package sr.unasat.jpa.dao;
 
+import sr.unasat.jpa.entities.Address;
 import sr.unasat.jpa.entities.Employee;
+import sr.unasat.jpa.entities.McDonalds;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Set;
 
 public class EmployeeDAO {
     private EntityManager entityManager;
@@ -40,29 +42,34 @@ public class EmployeeDAO {
         entityManager.getTransaction().commit();
     }
 
-    public int updateEmployee(Employee employee) {
+    public void insertEmployee(McDonalds mcDonalds) {
         entityManager.getTransaction().begin();
-        String jpql = "update Employee e set e.code = :code, e.firstName = :firstName, e.lastName = :lastName, e.gender = :gender, e.phoneNumber = :phoneNumber, e.email = :email where e.id = :id";
-        Query query = entityManager.createQuery(jpql);
-        query.setParameter("id", employee.getId());
-        query.setParameter("code", employee.getCode());
-        query.setParameter("firstName", employee.getFirstName());
-        query.setParameter("lastName", employee.getLastName());
-        query.setParameter("gender", employee.getGender());
-        query.setParameter("phoneNumber", employee.getPhoneNumber());
-        query.setParameter("email", employee.getEmail());
-        int updated = query.executeUpdate();
+        for (Employee employee : mcDonalds.getEmployees()) {
+            if (employee.getId() == 0) {
+                entityManager.persist(employee);
+            }
+        }
         entityManager.getTransaction().commit();
-        return updated;
     }
 
-    public int deleteEmployee(Employee employee) {
+    public void updateEmployee(Employee employee) {
         entityManager.getTransaction().begin();
-        String jpql = "delete from Employee e where e.code = :code";
-        Query query = entityManager.createQuery(jpql);
-        query.setParameter("code", employee.getCode());
-        int deleted = query.executeUpdate();
+        for (McDonalds mcDonalds : employee.getMcDonalds()) {
+            if (mcDonalds.getId() == 0) {
+                entityManager.persist(mcDonalds);
+            }
+        }
+        entityManager.merge(employee);
         entityManager.getTransaction().commit();
-        return deleted;
+    }
+
+    public void deleteEmployee(Employee employee) {
+        entityManager.getTransaction().begin();
+        while (employee.getMcDonalds().iterator().hasNext()) {
+            McDonalds mcDonalds = employee.getMcDonalds().iterator().next();
+            employee.removeMcDonalds(mcDonalds);
+        }
+        entityManager.remove(employee);
+        entityManager.getTransaction().commit();
     }
 }
